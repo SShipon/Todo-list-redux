@@ -1,29 +1,40 @@
+import { useState } from "react";
 import { deleteTodo } from "@/redux/features/todoSlice";
 import { Button } from "../ui/button";
 import { useDispatch } from "react-redux";
 
-type TTodoCard ={
-  id: string; 
-  title:string,
-  description:string,
+type TTodoCard = {
+  id: string;
+  title: string;
+  description: string;
 }
 
-const TodoCard = ({ id, title,description} : TTodoCard) => {
-
+const TodoCard = ({ id, title, description }: TTodoCard) => {
   const dispatch = useDispatch();
+  const [isChecked, setIsChecked] = useState(false);
+  const [showModal, setShowModal] = useState(false);
 
   const handleDelete = () => {
+    setShowModal(true);
+  };
+
+  const confirmDelete = () => {
     dispatch(deleteTodo(id));
+    setShowModal(false);
+  };
+
+  const handleCheckboxChange = () => {
+    setIsChecked(!isChecked);
   };
 
   return (
     <div className="bg-white rounded-md flex justify-between p-3 border">
-      <input type="checkbox" name="" id="" />
+      <input checked={isChecked} onChange={handleCheckboxChange} type="checkbox" name="" id="" />
       <p className="font-semibold">{title}</p>
       <p>Time:</p>
       <p>{description}</p>
       <div className="space-x-3">
-        <Button onClick={handleDelete} className="bg-red-600">
+        <Button onClick={handleDelete} className={`bg-red-600 ${!isChecked ? 'cursor-not-allowed' : ''}`} disabled={!isChecked}>
           <svg
             xmlns="http://www.w3.org/2000/svg"
             fill="none"
@@ -56,6 +67,19 @@ const TodoCard = ({ id, title,description} : TTodoCard) => {
           </svg>
         </Button>
       </div>
+
+      {/* Modal */}
+      {showModal && (
+        <div className="fixed inset-0 bg-gray-500 bg-opacity-75 flex justify-center items-center z-50">
+          <div className="bg-white p-5 rounded-lg shadow-lg">
+            <h2 className="text-lg font-semibold mb-4">Are you sure you want to delete?</h2>
+            <div className="flex justify-end space-x-3">
+              <Button onClick={confirmDelete} className="bg-red-600">OK</Button>
+              <Button onClick={() => setShowModal(false)} className="bg-gray-600">Cancel</Button>
+            </div>
+          </div>
+        </div>
+      )}
     </div>
   );
 };
