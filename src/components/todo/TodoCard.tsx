@@ -1,5 +1,5 @@
-import { useState } from "react";
-import { deleteTodo } from "@/redux/features/todoSlice";
+import { useState, useEffect } from "react";
+import { deleteTodo, toggleComplete } from "@/redux/features/todoSlice";
 import { Button } from "../ui/button";
 import { useDispatch } from "react-redux";
 
@@ -7,12 +7,17 @@ type TTodoCard = {
   id: string;
   title: string;
   description: string;
+  isCompleted?: boolean
 }
 
-const TodoCard = ({ id, title, description }: TTodoCard) => {
+const TodoCard = ({ id, title, description, isCompleted = false }: TTodoCard) => {
   const dispatch = useDispatch();
-  const [isChecked, setIsChecked] = useState(false);
+  const [isChecked, setIsChecked] = useState(isCompleted);
   const [showModal, setShowModal] = useState(false);
+
+  useEffect(() => {
+    setIsChecked(isCompleted);
+  }, [isCompleted]);
 
   const handleDelete = () => {
     setShowModal(true);
@@ -25,13 +30,14 @@ const TodoCard = ({ id, title, description }: TTodoCard) => {
 
   const handleCheckboxChange = () => {
     setIsChecked(!isChecked);
+    dispatch(toggleComplete(id));
   };
 
   return (
     <div className="bg-white rounded-md flex justify-between p-3 border">
-      <input checked={isChecked} onChange={handleCheckboxChange} type="checkbox" name="" id="" />
+      <input onChange={handleCheckboxChange} checked={isChecked} type="checkbox" name="complete" id="complete" />
       <p className="font-semibold">{title}</p>
-      <p>Time:</p>
+      <p>{isChecked ? <span className="text-green-700">Done</span> : <span className="text-red-700">Pending</span>}</p>
       <p>{description}</p>
       <div className="space-x-3">
         <Button onClick={handleDelete} className={`bg-red-600 ${!isChecked ? 'cursor-not-allowed' : ''}`} disabled={!isChecked}>

@@ -25,9 +25,15 @@ const todoSlice = createSlice({
         deleteTodo: (state, action: PayloadAction<string>) => {
             state.todos = state.todos.filter(todo => todo.id !== action.payload);
           },
+          toggleComplete: (state, action: PayloadAction<string>) => {
+            const todo = state.todos.find((todo) => todo.id === action.payload);
+            if (todo) {
+              todo.isCompleted = !todo.isCompleted;
+            }
+          },
     },
 });
 
-export const  {AddTodo ,deleteTodo} = todoSlice.actions
+export const  {AddTodo ,deleteTodo,toggleComplete} = todoSlice.actions
 
 export default todoSlice.reducer;
