@@ -1,14 +1,29 @@
+import { deleteTodo } from "@/redux/features/todoSlice";
 import { Button } from "../ui/button";
+import { useDispatch } from "react-redux";
 
-const TodoCard = () => {
+type TTodoCard ={
+  id: string; 
+  title:string,
+  description:string,
+}
+
+const TodoCard = ({ id, title,description} : TTodoCard) => {
+
+  const dispatch = useDispatch();
+
+  const handleDelete = () => {
+    dispatch(deleteTodo(id));
+  };
+
   return (
     <div className="bg-white rounded-md flex justify-between p-3 border">
       <input type="checkbox" name="" id="" />
-      <p className="font-semibold">Todo Title </p>
+      <p className="font-semibold">{title}</p>
       <p>Time:</p>
-      <p>Description</p>
+      <p>{description}</p>
       <div className="space-x-3">
-        <Button className="bg-red-600">
+        <Button onClick={handleDelete} className="bg-red-600">
           <svg
             xmlns="http://www.w3.org/2000/svg"
             fill="none"
