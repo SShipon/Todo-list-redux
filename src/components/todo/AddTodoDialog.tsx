@@ -1,4 +1,4 @@
-import { FormEvent, useState } from "react";
+import React, { FormEvent, useState } from "react";
 import { Button } from "../ui/button";
 import {
   Dialog,
@@ -27,10 +27,11 @@ const AddTodoDialog = () => {
   const [task, setTask] = useState("");
   const [description, setDescription] = useState("");
   const [priority, setPriority] = useState("");
+  const [isSubmitted, setIsSubmitted] = useState(false); // State to track form submission
 
   const [addTodo] = useAddTodoMutation();
 
-  const onSubmit = (e: FormEvent) => {
+  const onSubmit = async (e: FormEvent) => {
     e.preventDefault();
 
     const taskDetails = {
@@ -40,7 +41,14 @@ const AddTodoDialog = () => {
       priority,
     };
 
-    addTodo(taskDetails);
+    try {
+      await addTodo(taskDetails);
+      setIsSubmitted(true); // Set submission flag to true on successful submission
+        
+      alert("Thank you dear user ")
+    } catch (error) {
+      console.error("Error submitting form:", error);
+    }
 
     // Clear fields after submission (optional)
     setTask("");
@@ -52,7 +60,7 @@ const AddTodoDialog = () => {
     <Dialog>
       <DialogTrigger asChild>
         <Button className="bg-primary-gradient text-xl font-semibold">
-        History Create Now
+          History Create Now
         </Button>
       </DialogTrigger>
       <DialogContent className="w-full max-w-lg mx-auto p-4 sm:p-6 md:p-8">
@@ -75,7 +83,10 @@ const AddTodoDialog = () => {
               />
             </div>
             <div className="grid grid-cols-1 sm:grid-cols-4 items-center gap-4">
-              <Label htmlFor="description" className="text-right sm:col-span-1">
+              <Label
+                htmlFor="description"
+                className="text-right sm:col-span-1"
+              >
                 Description:
               </Label>
               <textarea
@@ -88,7 +99,10 @@ const AddTodoDialog = () => {
             </div>
             <div className="grid grid-cols-1 sm:grid-cols-4 items-center gap-4">
               <Label className="text-right sm:col-span-1">Priority:</Label>
-              <Select onValueChange={(value) => setPriority(value)} required>
+              <Select
+                onValueChange={(value) => setPriority(value)}
+                required
+              >
                 <SelectTrigger className="col-span-3 sm:col-span-3 border border-green-500">
                   <SelectValue placeholder="Select a Priority" />
                 </SelectTrigger>
@@ -109,10 +123,12 @@ const AddTodoDialog = () => {
             </DialogClose>
           </DialogFooter>
         </form>
+        {isSubmitted && (
+          <p className="text-center text-green-500 mt-4">Thank you dear!</p>
+        )}
       </DialogContent>
     </Dialog>
   );
 };
 
 export default AddTodoDialog;
-
