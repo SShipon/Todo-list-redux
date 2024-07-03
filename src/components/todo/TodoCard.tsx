@@ -1,27 +1,62 @@
-import { deleteTodo } from "@/redux/features/todoSlice";
-import { Button } from "../ui/button";
+import React from 'react';
+import { useDeleteTodoMutation } from "@/redux/api/api";
 import { useDispatch } from "react-redux";
+import { Button } from "../ui/button";
+import { deleteTodo as deleteTodoLocal } from "@/redux/features/todoSlice"; // Import the action from your slice
 
-type TTodoCard ={
-  id: string; 
-  title:string,
-  description:string,
-}
+type TTodoCard = {
+  _id: string;
+  title: string;
+  description: string;
+  isCompleted?: boolean;
+  priority: string
 
-const TodoCard = ({ id, title,description} : TTodoCard) => {
+};
 
+const TodoCard = ({ _id, title, description ,isCompleted, priority}: TTodoCard) => {
   const dispatch = useDispatch();
+  const [deleteTodo, { error }] = useDeleteTodoMutation();
 
-  const handleDelete = () => {
-    dispatch(deleteTodo(id));
+  const toggleState = () => {
+    console.log('Toggle');
+  };
+
+  const handleDelete = async () => {
+    try {
+      await deleteTodo(_id).unwrap();
+      dispatch(deleteTodoLocal(_id)); // Update local state after successful deletion
+    } catch (error) {
+      console.error('Failed to delete the todo:', error);
+    }
   };
 
   return (
-    <div className="bg-white rounded-md flex justify-between p-3 border">
-      <input type="checkbox" name="" id="" />
-      <p className="font-semibold">{title}</p>
-      <p>Time:</p>
-      <p>{description}</p>
+    <div className="bg-white rounded-md flex justify-between p-3 border items-center">
+      <input
+        className="mr-3"
+        onChange={toggleState}
+        type="checkbox"
+        name="complete"
+        id={`complete-${_id}`}
+      />
+      <p className="font-semibold flex-1">{title}</p>
+        <div className='flex-1 flex items-center gap-2'>
+        <div className={`size-3 rounded-full 
+          ${priority === "high" ? "bg-red-600" : null}
+          ${priority === "medium" ? "bg-yellow-500" : null}
+          ${priority === "low" ? "bg-green-600" : null}
+          
+          `}></div>
+        <p className='flex-1'>{priority}</p>
+        </div>
+      <div className="flex-1">
+        {isCompleted ? (
+          <p className="text-green-500">Done</p>
+        ) : (
+          <p className="text-red-500">Pending</p>
+        )}
+      </div>
+      <p className="flex-[2]">{description}</p>
       <div className="space-x-3">
         <Button onClick={handleDelete} className="bg-red-600">
           <svg
@@ -56,6 +91,7 @@ const TodoCard = ({ id, title,description} : TTodoCard) => {
           </svg>
         </Button>
       </div>
+      {error && <p className="text-red-500">Failed to delete the todo</p>}
     </div>
   );
 };
