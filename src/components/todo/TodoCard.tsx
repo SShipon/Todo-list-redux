@@ -2,18 +2,17 @@ import React from 'react';
 import { useDeleteTodoMutation } from "@/redux/api/api";
 import { useDispatch } from "react-redux";
 import { Button } from "../ui/button";
-import { deleteTodo as deleteTodoLocal } from "@/redux/features/todoSlice"; // Import the action from your slice
+import { deleteTodo as deleteTodoLocal } from "@/redux/features/todoSlice";
 
 type TTodoCard = {
   _id: string;
   title: string;
   description: string;
   isCompleted?: boolean;
-  priority: string
-
+  priority: string;
 };
 
-const TodoCard = ({ _id, title, description ,isCompleted, priority}: TTodoCard) => {
+const TodoCard = ({ _id, title, description, isCompleted, priority }: TTodoCard) => {
   const dispatch = useDispatch();
   const [deleteTodo, { error }] = useDeleteTodoMutation();
 
@@ -31,33 +30,36 @@ const TodoCard = ({ _id, title, description ,isCompleted, priority}: TTodoCard) 
   };
 
   return (
-    <div className="bg-white rounded-md flex justify-between p-3 border items-center">
-      <input
-        className="mr-3"
-        onChange={toggleState}
-        type="checkbox"
-        name="complete"
-        id={`complete-${_id}`}
-      />
-      <p className="font-semibold flex-1">{title}</p>
-        <div className='flex-1 flex items-center gap-2'>
-        <div className={`size-3 rounded-full 
-          ${priority === "high" ? "bg-red-600" : null}
-          ${priority === "medium" ? "bg-yellow-500" : null}
-          ${priority === "low" ? "bg-green-600" : null}
-          
-          `}></div>
-        <p className='flex-1'>{priority}</p>
-        </div>
-      <div className="flex-1">
+    <div className="bg-white rounded-md flex flex-col sm:flex-row justify-between p-3 border items-center mb-4">
+      <div className="flex items-center mb-2 sm:mb-0 gap-2">
+        <input
+          className="mr-3"
+          onChange={toggleState}
+          type="checkbox"
+          name="complete"
+          id={`complete-${_id}`}
+        />
+        <p className="font-semibold">{title}</p>
+      </div>
+      <div className="flex items-center mb-2 sm:mb-0 px-4">
+        <div
+          className={`h-3 w-3 rounded-full mr-2
+            ${priority === "high" ? "bg-red-600" : ""}
+            ${priority === "medium" ? "bg-yellow-500" : ""}
+            ${priority === "low" ? "bg-green-600" : ""}
+          `}
+        ></div>
+        <p>{priority}</p>
+      </div>
+      <div className="flex items-center mb-2 sm:mb-0">
         {isCompleted ? (
           <p className="text-green-500">Done</p>
         ) : (
-          <p className="text-red-500">Pending</p>
+          <p className="text-red-500 px-4">Pending</p>
         )}
       </div>
-      <p className="flex-[2]">{description}</p>
-      <div className="space-x-3">
+      <p className="flex-1 mb-2 sm:mb-0 sm:mr-4">{description}</p>
+      <div className="flex items-center space-x-3">
         <Button onClick={handleDelete} className="bg-red-600">
           <svg
             xmlns="http://www.w3.org/2000/svg"
@@ -65,7 +67,7 @@ const TodoCard = ({ _id, title, description ,isCompleted, priority}: TTodoCard) 
             viewBox="0 0 24 24"
             strokeWidth={1.5}
             stroke="currentColor"
-            className="size-6"
+            className="w-6 h-6"
           >
             <path
               strokeLinecap="round"
@@ -81,7 +83,7 @@ const TodoCard = ({ _id, title, description ,isCompleted, priority}: TTodoCard) 
             viewBox="0 0 24 24"
             strokeWidth={1.5}
             stroke="currentColor"
-            className="size-6"
+            className="w-6 h-6"
           >
             <path
               strokeLinecap="round"

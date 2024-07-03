@@ -3,6 +3,8 @@ import { useGetTodosQuery } from "@/redux/api/api";
 import TodoCard from "./TodoCard";
 import AddTodoDialog from "./AddTodoDialog";
 import TodoFilter from "./TodoFilter";
+import Loading from "@/pages/Loading";
+import FidgetSpinnerLoading from "@/pages/FidgetSpinnerLoading";
 
 type Todo = {
   _id: string;
@@ -14,15 +16,15 @@ type Todo = {
 };
 
 const TodoContainer = () => {
-  const { data: todos, isLoading, isError } = useGetTodosQuery(undefined, {pollingInterval:1000, refetchOnReconnect:true});
+  const { data: todos, isLoading, isError } = useGetTodosQuery(undefined);
   console.log(todos)
 
   if (isLoading) {
-    return <p>...Loading</p>;
+    return <Loading />
   }
 
   if (isError) {
-    return <p>...API not get</p>;
+    return <FidgetSpinnerLoading />
   }
 
   return (
@@ -33,13 +35,14 @@ const TodoContainer = () => {
       </div>
       <div className="bg-red-500 bg-primary-gradient w-full h-full rounded-xl p-[5px]">
         <div className="bg-white p-5 w-full h-full rounded-lg space-y-3">
-        {todos?.data?.map((item:Todo) => (
-            <TodoCard {...item} />
-          ))}
-        </div>
-        {/* <div className="bg-white tex-2xl font-bold p-5 flex justify-center items-center rounded-md">
-            <p>There is no Task pending</p>
-          </div> */}
+        {todos?.data?.length > 0 ? (
+            todos.data.map((item: Todo) => <TodoCard key={item._id} {...item} />)
+          ) : (
+            <div className="bg-white text-2xl font-bold p-5 flex justify-center items-center rounded-md">
+              <p>There are no tasks pending</p>
+            </div>
+          )}
+          </div>
       </div>
     </div>
   );

@@ -12,7 +12,6 @@ import {
 } from "../ui/dialog";
 import { Input } from "../ui/input";
 import { Label } from "../ui/label";
-// import { useAppDispatch } from "@/redux/hooks/hook";
 import { useAddTodoMutation } from "@/redux/api/api";
 import {
   Select,
@@ -27,15 +26,9 @@ import {
 const AddTodoDialog = () => {
   const [task, setTask] = useState("");
   const [description, setDescription] = useState("");
-  const [priority, setPriority] = useState("")
-  console.log(priority)
+  const [priority, setPriority] = useState("");
 
-  // const dispatch  = useAppDispatch();
-
-  // for server
-
-  const [addTodo, { isError, isLoading, isSuccess }] = useAddTodoMutation();
-  console.log({addTodo, isError, isLoading, isSuccess });
+  const [addTodo] = useAddTodoMutation();
 
   const onSubmit = (e: FormEvent) => {
     e.preventDefault();
@@ -44,65 +37,67 @@ const AddTodoDialog = () => {
       title: task,
       isCompleted: false,
       description,
-      priority, // Default priority value
+      priority,
     };
 
-    console.log(taskDetails,  "inside Modals")
-
-    // dispatch(AddTodo(taskDetails));
-    // console.log(taskDetails);
     addTodo(taskDetails);
+
+    // Clear fields after submission (optional)
+    setTask("");
+    setDescription("");
+    setPriority("");
   };
 
   return (
     <Dialog>
       <DialogTrigger asChild>
         <Button className="bg-primary-gradient text-xl font-semibold">
-          Add todo
+        History Create Now
         </Button>
       </DialogTrigger>
-      <DialogContent className="sm:max-w-[425px]">
+      <DialogContent className="w-full max-w-lg mx-auto p-4 sm:p-6 md:p-8">
         <DialogHeader>
-          <DialogTitle>Add Todo</DialogTitle>
-          <DialogDescription>
-            Add your Task That you want to finish Todo
-          </DialogDescription>
+          <DialogTitle>History Add Now</DialogTitle>
+          <DialogDescription>Express your feelings</DialogDescription>
         </DialogHeader>
         <form onSubmit={onSubmit}>
           <div className="grid gap-4 py-4">
-            <div className="grid grid-cols-4 items-center gap-4">
-              <Label htmlFor="task" className="text-right">
-                Task
+            <div className="grid grid-cols-1 sm:grid-cols-4 items-center gap-4">
+              <Label htmlFor="task" className="text-right sm:col-span-1">
+                Task:
               </Label>
               <Input
                 onBlur={(e) => setTask(e.target.value)}
                 id="task"
-                className="col-span-3"
+                className="col-span-3 sm:col-span-3 border border-green-500 outline-none p-2"
+                required
+                placeholder="Your Task ..."
               />
             </div>
-            <div className="grid grid-cols-4 items-center gap-4">
-              <Label htmlFor="description" className="text-right">
-                Description
+            <div className="grid grid-cols-1 sm:grid-cols-4 items-center gap-4">
+              <Label htmlFor="description" className="text-right sm:col-span-1">
+                Description:
               </Label>
-              <Input
+              <textarea
                 onBlur={(e) => setDescription(e.target.value)}
                 id="description"
-                className="col-span-3"
+                className="col-span-3 sm:col-span-3 w-full border border-green-500 p-2"
+                required
+                placeholder="Type here ..."
               />
             </div>
-            <div className="grid grid-cols-4 items-center gap-4">
-              <Label className="text-right">Priority</Label>
-              <Select onValueChange={(value) => setPriority(value)}>
-                <SelectTrigger className="col-span-3">
+            <div className="grid grid-cols-1 sm:grid-cols-4 items-center gap-4">
+              <Label className="text-right sm:col-span-1">Priority:</Label>
+              <Select onValueChange={(value) => setPriority(value)} required>
+                <SelectTrigger className="col-span-3 sm:col-span-3 border border-green-500">
                   <SelectValue placeholder="Select a Priority" />
                 </SelectTrigger>
                 <SelectContent>
-                  <SelectGroup >
-                    <SelectLabel>what is Priority</SelectLabel>
+                  <SelectGroup>
+                    <SelectLabel>What is Priority</SelectLabel>
                     <SelectItem value="high">High</SelectItem>
                     <SelectItem value="medium">Medium</SelectItem>
                     <SelectItem value="low">Low</SelectItem>
-                
                   </SelectGroup>
                 </SelectContent>
               </Select>
@@ -110,7 +105,7 @@ const AddTodoDialog = () => {
           </div>
           <DialogFooter>
             <DialogClose asChild>
-              <Button type="submit">Save changes</Button>
+              <Button type="submit">Submit</Button>
             </DialogClose>
           </DialogFooter>
         </form>
@@ -120,3 +115,4 @@ const AddTodoDialog = () => {
 };
 
 export default AddTodoDialog;
+
