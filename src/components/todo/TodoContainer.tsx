@@ -39,7 +39,7 @@ const TodoContainer = () => {
             todos.data.map((item: Todo) => <TodoCard key={item._id} {...item} />)
           ) : (
             <div className="bg-white text-2xl font-bold p-5 flex justify-center items-center rounded-md">
-              <p>There are no tasks pending</p>
+              <p> <Loading /> There is no history here. Please add your history </p>
             </div>
           )}
           </div>
