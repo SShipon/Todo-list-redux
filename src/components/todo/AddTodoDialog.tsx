@@ -87,15 +87,15 @@ const AddTodoDialog = () => {
         <form onSubmit={onSubmit}>
           <div className="grid gap-4 py-4">
             <div className="grid grid-cols-1 sm:grid-cols-4 items-center gap-4">
-              <Label htmlFor="task" className="text-right sm:col-span-1">
-                Task:
+              <Label htmlFor="name" className="text-right sm:col-span-1">
+               Name: 
               </Label>
               <Input
                 onChange={(e) => setTask(e.target.value)}
-                id="task"
+                id="name"
                 className="col-span-3 sm:col-span-3 border border-green-500 outline-none p-2"
                 required
-                placeholder="Your Task ..."
+                placeholder="Your Name ..."
                 value={task}
               />
             </div>
