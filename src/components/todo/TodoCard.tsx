@@ -4,6 +4,7 @@ import { useDispatch } from "react-redux";
 import { Button } from "../ui/button";
 import Modal from 'react-modal';
 import { deleteTodo as deleteTodoLocal } from "@/redux/features/todoSlice";
+import Skeleton from "@/pages/Skeleton";
 
 type TTodoCard = {
   _id: string;
@@ -11,9 +12,11 @@ type TTodoCard = {
   description: string;
   isCompleted?: boolean;
   priority: string;
+  isLoading?: boolean;  // Add isLoading prop
+ 
 };
 
-const TodoCard = ({ _id, title, description, isCompleted, priority }: TTodoCard) => {
+const TodoCard = ({ _id, title, description, isCompleted, priority,isLoading }: TTodoCard) => {
   const dispatch = useDispatch();
   const [deleteTodo, { error }] = useDeleteTodoMutation();
   const [isModalOpen, setIsModalOpen] = useState(false);
@@ -39,6 +42,10 @@ const TodoCard = ({ _id, title, description, isCompleted, priority }: TTodoCard)
   const closeModal = () => {
     setIsModalOpen(false);
   };
+
+  if (isLoading) {
+    return <Skeleton />;
+  }
 
   return (
     <div className="bg-white rounded-md flex flex-col sm:flex-row justify-between p-3 border items-center mb-4">
