@@ -1,6 +1,6 @@
-import React, { FormEvent, useState } from "react";
+import React, { FormEvent, useState, useEffect } from "react";
 import { Button } from "../ui/button";
-import { toast, } from 'react-toastify';
+import { toast } from 'react-toastify';
 import {
   Dialog,
   DialogClose,
@@ -29,8 +29,21 @@ const AddTodoDialog = () => {
   const [description, setDescription] = useState("");
   const [priority, setPriority] = useState("");
   const [isSubmitted, setIsSubmitted] = useState(false); // State to track form submission
+  const [isFromValidation, setIsFromValidation] = useState(false); // State to track form validation
 
   const [addTodo] = useAddTodoMutation();
+
+  useEffect(() => {
+    // Check if all fields are filled  validation
+    if (task && description && priority) {
+      setIsFromValidation(true);
+    } else {
+      setIsFromValidation(false);
+    }
+  }, [task, description, priority]);
+
+
+
 
   const onSubmit = async (e: FormEvent) => {
     e.preventDefault();
@@ -48,12 +61,12 @@ const AddTodoDialog = () => {
       toast.success("Thank you dear for writing your history 🥰🥰 !!!", {
         position: "top-right"
       });
-   
+
     } catch (error) {
       console.error("Error submitting form:", error);
     }
 
-    // Clear fields after submission (optional)
+    // Clear fields after submission 
     setTask("");
     setDescription("");
     setPriority("");
@@ -78,11 +91,12 @@ const AddTodoDialog = () => {
                 Task:
               </Label>
               <Input
-                onBlur={(e) => setTask(e.target.value)}
+                onChange={(e) => setTask(e.target.value)}
                 id="task"
                 className="col-span-3 sm:col-span-3 border border-green-500 outline-none p-2"
                 required
                 placeholder="Your Task ..."
+                value={task}
               />
             </div>
             <div className="grid grid-cols-1 sm:grid-cols-4 items-center gap-4">
@@ -93,11 +107,12 @@ const AddTodoDialog = () => {
                 Description:
               </Label>
               <textarea
-                onBlur={(e) => setDescription(e.target.value)}
+                onChange={(e) => setDescription(e.target.value)}
                 id="description"
                 className="col-span-3 sm:col-span-3 w-full border border-green-500 p-2"
                 required
                 placeholder="Type here ..."
+                value={description}
               />
             </div>
             <div className="grid grid-cols-1 sm:grid-cols-4 items-center gap-4">
@@ -105,6 +120,7 @@ const AddTodoDialog = () => {
               <Select
                 onValueChange={(value) => setPriority(value)}
                 required
+                value={priority}
               >
                 <SelectTrigger className="col-span-3 sm:col-span-3 border border-green-500">
                   <SelectValue placeholder="Select a Priority" />
@@ -122,7 +138,9 @@ const AddTodoDialog = () => {
           </div>
           <DialogFooter>
             <DialogClose asChild>
-              <Button type="submit">Submit</Button>
+              <Button type="submit" disabled={!isFromValidation}>
+                Submit
+              </Button>
             </DialogClose>
           </DialogFooter>
         </form>
