@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import { useState } from "react";
 import { useDeleteTodoMutation } from "@/redux/api/api";
 import { useDispatch } from "react-redux";
 import { Button } from "../ui/button";
