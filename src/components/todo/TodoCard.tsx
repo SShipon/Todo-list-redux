@@ -113,12 +113,13 @@ const TodoCard = ({ _id, title, description, isCompleted, priority }: TTodoCard)
         className="bg-white p-4 rounded-lg shadow-lg"
         overlayClassName="fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center"
       >
-        <h2 className="text-xl font-semibold mb-4">Are you sure you want to delete this History !!!</h2>
+        <h2 className="text-xl font-semibold mb-4">
+        Only admin can delete this History !!!</h2>
         <div className="flex justify-end space-x-3">
-          <Button onClick={closeModal} className="bg-gray-400">
+          <Button  onClick={closeModal} className="bg-gray-400">
             Cancel
           </Button>
-          <Button onClick={handleDelete} className="bg-red-600">
+          <Button disabled onClick={handleDelete} className="bg-red-600">
             Delete
           </Button>
         </div>
