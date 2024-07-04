@@ -1,7 +1,8 @@
-import React from 'react';
+import React, { useState } from 'react';
 import { useDeleteTodoMutation } from "@/redux/api/api";
 import { useDispatch } from "react-redux";
 import { Button } from "../ui/button";
+import Modal from 'react-modal';
 import { deleteTodo as deleteTodoLocal } from "@/redux/features/todoSlice";
 
 type TTodoCard = {
@@ -15,6 +16,7 @@ type TTodoCard = {
 const TodoCard = ({ _id, title, description, isCompleted, priority }: TTodoCard) => {
   const dispatch = useDispatch();
   const [deleteTodo, { error }] = useDeleteTodoMutation();
+  const [isModalOpen, setIsModalOpen] = useState(false);
 
   const toggleState = () => {
     console.log('Toggle');
@@ -24,9 +26,18 @@ const TodoCard = ({ _id, title, description, isCompleted, priority }: TTodoCard)
     try {
       await deleteTodo(_id).unwrap();
       dispatch(deleteTodoLocal(_id)); // Update local state after successful deletion
+      setIsModalOpen(false); // Close the modal after deletion
     } catch (error) {
       console.error('Failed to delete the todo:', error);
     }
+  };
+
+  const openModal = () => {
+    setIsModalOpen(true);
+  };
+
+  const closeModal = () => {
+    setIsModalOpen(false);
   };
 
   return (
@@ -60,7 +71,7 @@ const TodoCard = ({ _id, title, description, isCompleted, priority }: TTodoCard)
       </div>
       <p className="flex-1 mb-2 sm:mb-0 sm:mr-4">{description}</p>
       <div className="flex items-center space-x-3">
-        <Button onClick={handleDelete} className="bg-red-600">
+        <Button onClick={openModal} className="bg-red-600">
           <svg
             xmlns="http://www.w3.org/2000/svg"
             fill="none"
@@ -93,7 +104,25 @@ const TodoCard = ({ _id, title, description, isCompleted, priority }: TTodoCard)
           </svg>
         </Button>
       </div>
-      {error && <p className="text-red-500">Failed to delete the todo</p>}
+      {error && <p className="text-red-500">Failed to delete the History !!!</p>}
+
+      <Modal
+        isOpen={isModalOpen}
+        onRequestClose={closeModal}
+        contentLabel="Confirm Delete"
+        className="bg-white p-4 rounded-lg shadow-lg"
+        overlayClassName="fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center"
+      >
+        <h2 className="text-xl font-semibold mb-4">Are you sure you want to delete this History !!!</h2>
+        <div className="flex justify-end space-x-3">
+          <Button onClick={closeModal} className="bg-gray-400">
+            Cancel
+          </Button>
+          <Button onClick={handleDelete} className="bg-red-600">
+            Delete
+          </Button>
+        </div>
+      </Modal>
     </div>
   );
 };

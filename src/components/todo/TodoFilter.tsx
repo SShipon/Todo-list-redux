@@ -10,6 +10,7 @@ import { DropdownMenu,DropdownMenuContent,
 
 const TodoFilter = () => {
     const [position, setPosition] =useState("bottom")
+    console.log(position)
     return (
         <DropdownMenu>
       <DropdownMenuTrigger asChild>

@@ -1,5 +1,6 @@
 import React, { FormEvent, useState } from "react";
 import { Button } from "../ui/button";
+import { toast, } from 'react-toastify';
 import {
   Dialog,
   DialogClose,
@@ -44,8 +45,10 @@ const AddTodoDialog = () => {
     try {
       await addTodo(taskDetails);
       setIsSubmitted(true); // Set submission flag to true on successful submission
-        
-      alert("Thank you dear user ")
+      toast.success("Thank you dear for writing your history 🥰🥰 !!!", {
+        position: "top-right"
+      });
+   
     } catch (error) {
       console.error("Error submitting form:", error);
     }
