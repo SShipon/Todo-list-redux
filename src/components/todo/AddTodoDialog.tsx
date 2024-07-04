@@ -42,9 +42,6 @@ const AddTodoDialog = () => {
     }
   }, [task, description, priority]);
 
-
-
-
   const onSubmit = async (e: FormEvent) => {
     e.preventDefault();
 
@@ -75,7 +72,7 @@ const AddTodoDialog = () => {
   return (
     <Dialog>
       <DialogTrigger asChild>
-        <Button className="bg-primary-gradient text-xl font-semibold">
+        <Button className="bg-primary-gradient text-xl font-semibold fixed bottom-4 right-4 md:relative md:bottom-auto md:right-auto">
           History Create Now
         </Button>
       </DialogTrigger>
@@ -88,7 +85,7 @@ const AddTodoDialog = () => {
           <div className="grid gap-4 py-4">
             <div className="grid grid-cols-1 sm:grid-cols-4 items-center gap-4">
               <Label htmlFor="name" className="text-right sm:col-span-1">
-               Name: 
+                Name:
               </Label>
               <Input
                 onChange={(e) => setTask(e.target.value)}
