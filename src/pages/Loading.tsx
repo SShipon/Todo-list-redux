@@ -7,7 +7,7 @@ const Loading = () => {
                 visible={true}
                 height="80"
                 width="80"
-                colors={["#4fa94d", "#4fa94d", "#4fa94d"]}
+                colors={["#D60662", "#4B4F90", "#4B9083"]}
                 ariaLabel="rotating-triangles-loading"
                 wrapperStyle={{}}
                 wrapperClass=""

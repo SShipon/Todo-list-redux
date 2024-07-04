@@ -5,6 +5,7 @@ import AddTodoDialog from "./AddTodoDialog";
 import TodoFilter from "./TodoFilter";
 import Loading from "@/pages/Loading";
 import FidgetSpinnerLoading from "@/pages/FidgetSpinnerLoading";
+import PuffSpinners from "@/pages/PuffSpinners";
 
 type Todo = {
   _id: string;
@@ -20,7 +21,7 @@ const TodoContainer = () => {
   console.log(todos)
 
   if (isLoading) {
-    return <Loading />
+    return <PuffSpinners />
   }
 
   if (isError) {
