@@ -1,5 +1,5 @@
 import { useState } from "react";
-import { useDeleteTodoMutation } from "@/redux/api/api";
+import { useDeleteTodoMutation, useUpdatedTodoMutation } from "@/redux/api/api";
 import { useDispatch } from "react-redux";
 import { Button } from "../ui/button";
 import Modal from 'react-modal';
@@ -12,17 +12,38 @@ type TTodoCard = {
   description: string;
   isCompleted?: boolean;
   priority: string;
-  isLoading?: boolean;  // Add isLoading prop
- 
+  isLoading?: boolean;
 };
 
-const TodoCard = ({ _id, title, description, isCompleted, priority,isLoading }: TTodoCard) => {
+const TodoCard = ({ _id, title, description, isCompleted, priority, isLoading }: TTodoCard) => {
   const dispatch = useDispatch();
   const [deleteTodo, { error }] = useDeleteTodoMutation();
+  const [updateTodo] = useUpdatedTodoMutation();
   const [isModalOpen, setIsModalOpen] = useState(false);
+  const [completedState, setCompletedState] = useState(isCompleted);
 
-  const toggleState = () => {
-    console.log('Toggle');
+  const toggleState = async () => {
+    const taskData = {
+      _id,
+      title,
+      description,
+      isCompleted: !completedState,
+      priority
+    };
+
+    const options = {
+      id: _id,
+      data: taskData
+    };
+
+    console.log(options, 'mongoDB')
+
+    try {
+      await updateTodo(options).unwrap();
+      setCompletedState(!completedState);  // Update local state
+    } catch (error) {
+      console.error('Failed to update todo:', error);
+    }
   };
 
   const handleDelete = async () => {
@@ -56,6 +77,7 @@ const TodoCard = ({ _id, title, description, isCompleted, priority,isLoading }: 
           type="checkbox"
           name="complete"
           id={`complete-${_id}`}
+          checked={completedState}  // Bind checked state to local state
         />
         <p className="font-semibold">{title}</p>
       </div>
@@ -70,8 +92,8 @@ const TodoCard = ({ _id, title, description, isCompleted, priority,isLoading }: 
         <p>{priority}</p>
       </div>
       <div className="flex items-center mb-2 sm:mb-0">
-        {isCompleted ? (
-          <p className="text-green-500">Done</p>
+        {completedState ? (
+          <p className="text-green-500 px-4">Done</p>
         ) : (
           <p className="text-red-500 px-4">Pending</p>
         )}
